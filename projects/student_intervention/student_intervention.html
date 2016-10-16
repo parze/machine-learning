@@ -12155,7 +12155,7 @@ Testing set has 95 samples.
 <p><strong>Answer: </strong></p>
 <p>After quickly running a linear kernel SVM on the data, it shows that the data is not linear seprable (about 70%). I assume that features have dependencies. Also the data set is quite small compare to many other problems. I selected following three models.</p>
 <p><strong><em> Decision Trees </em></strong></p>
-<p>Decision Trees has been used for classification, diagnosing, etc (see [3] below)</p>
+<p>Decision Trees has been used for classification, diagnosing, etc (see [3] below). I selected this model since it can handle non-linear classification boundary and it enables me to learn more about the features of the data set by examining the tree. Also, if we were to run this towards hundred of thousands of students it would still be able to handle it.</p>
 <p>Model strengths, weaknesses, and suitability for the problem at hand</p>
 <ul>
 <li>(+) Decision Trees are easy to interpret and learn more about the feature domain. </li>
@@ -12165,7 +12165,7 @@ Testing set has 95 samples.
 <li>(-) If not careful Decision Trees can overfit. Since training the tree is a NP-complete problem, heuristic algorithms is used not guaranteeing a global minimum. </li>
 </ul>
 <p><strong><em> Ensemble Methods (Random Forest, Gradient Boosting) </em></strong></p>
-<p>Random Forest has been used to accurately detect common human activities (see [4] below).</p>
+<p>Random Forest has been used to accurately detect common human activities (see [4] below). I selected this model since it can handle non-linear classification boundary and is resistent towards overfitting. Also, if we were to run this towards hundred of thousands of students it would still be able to handle it.</p>
 <p>Model strengths, weaknesses, and suitability for the problem at hand</p>
 <ul>
 <li>(+) It has proven to be resistent towards overfitting </li>
@@ -12174,7 +12174,7 @@ Testing set has 95 samples.
 <li>(-) Unlike Decision trees it will be hard to interpret when there are many trees to consider</li>
 </ul>
 <p><strong><em> SVM </em></strong></p>
-<p>SVM has been used to detect persons with diabetes and pre-diabetes (see [6] below).</p>
+<p>SVM has been used to detect persons with diabetes and pre-diabetes (see [6] below). I selected this model since it can handle non-linear classification given that I use the right kernel. I selected the Radial Basis Function kernel.</p>
 <p>Model strengths, weaknesses, and suitability for the problem at hand</p>
 <ul>
 <li>(+) Since the training set is not that large SVM can be used successfully in this case. </li>
