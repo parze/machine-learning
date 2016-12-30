@@ -13990,7 +13990,7 @@ o+AAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Grocery/Detergents_Paper might have a touch of linear correlation. Grocery/Milk might have an even less touch of linear correlation. Delicatessen does not seem to correlate with any of the other features which confirm the conclusion above.</p>
+<p>Grocery/Detergents_Paper might have a touch of linear correlation. Grocery/Milk might have an even less touch of linear correlation. Delicatessen does not seem to correlate with any of the other features which confirm the conclusion above. No one looks like a normal distribution since no one is symmetric. All seems to be skewed right.</p>
 
 </div>
 </div>
@@ -18975,10 +18975,10 @@ oKeGkYiIiIiIBD01jEREREREJOipYSQiIiIiIkFPDSMREREREQl6ahiJiIiIiEjQU8NIRERERESC
 <p><strong>Answer:</strong></p>
 <p>The first and second principal component explain about 71% (0.4430+0.2638) of the variance. The first four explains about 93% of the variance.</p>
 <ul>
-<li>The first component manage to explain 44% of the variance by mainly using Milk, Grocery, and Detergents_paper. </li>
-<li>The second component manage to explain 26% of the variance by using the other three features, Fresh, Frozen, and Delicatessen</li>
-<li>The third component manage to explain 12% of the variance by mainly increasing the importance of Delicatessen and decrease the importance of Fresh</li>
-<li>The fourth component manage to explain 10% of the variance by mainly increasing the importance of Frozen and decreasing the importance of Delicatessen</li>
+<li>The first component explains 44% of the variance by large possitive weights in Milk, Grocery, Detergents_paper, and negative weights in Fresh and Frozen. This pattern might represent spending in household staples products that are purchased together. </li>
+<li>The second component explains 26% of the variance by positive weights in Fresh, Frozen, and Delicatessen. This pattern might represent spending by Cafés.</li>
+<li>The third component explains 12% of the variance by positive weights in Delicatessen and negative weights in Fresh</li>
+<li>The fourth component explains 10% of the variance by positive weights in Frozen and negative weights in Delicatessen</li>
 </ul>
 
 </div>
@@ -20076,20 +20076,25 @@ BiBJkiRJnfH/TyR04jXUEfQAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Inverse transform the centers</span>
 <span class="n">log_centers</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span>
 
 <span class="c1"># Exponentiate the centers</span>
-<span class="n">true_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_centers</span><span class="p">)</span>
+<span class="n">true_centers_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_centers</span><span class="p">)</span>
 
 <span class="c1"># Display the true centers</span>
 <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Segment {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">))]</span>
-<span class="n">true_centers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">true_centers</span><span class="p">),</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">true_centers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">true_centers_array</span><span class="p">),</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <span class="n">true_centers</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">segments</span>
+<span class="k">print</span> <span class="s2">&quot;Segment Centers&quot;</span>
 <span class="n">display</span><span class="p">(</span><span class="n">true_centers</span><span class="p">)</span>
+<span class="k">print</span> <span class="s2">&quot;Centers in percent of mean&quot;</span>
+<span class="n">display</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">true_centers</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">())</span>
+<span class="k">print</span> <span class="s2">&quot;Centers in percent of median&quot;</span>
+<span class="n">display</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">true_centers</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">())</span>
 </pre></div>
 
 </div>
@@ -20099,6 +20104,13 @@ BiBJkiRJnfH/TyR04jXUEfQAAAAASUVORK5CYII=
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Segment Centers
+</pre>
+</div>
+</div>
 
 <div class="output_area"><div class="prompt"></div>
 
@@ -20142,6 +20154,104 @@ BiBJkiRJnfH/TyR04jXUEfQAAAAASUVORK5CYII=
 
 </div>
 
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Centers in percent of mean
+</pre>
+</div>
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Fresh</th>
+      <th>Milk</th>
+      <th>Grocery</th>
+      <th>Frozen</th>
+      <th>Detergents_Paper</th>
+      <th>Delicatessen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Segment 0</th>
+      <td>73.433333</td>
+      <td>35.403727</td>
+      <td>33.819645</td>
+      <td>66.992188</td>
+      <td>11.697327</td>
+      <td>46.688525</td>
+    </tr>
+    <tr>
+      <th>Segment 1</th>
+      <td>35.966667</td>
+      <td>109.506556</td>
+      <td>120.173563</td>
+      <td>33.723958</td>
+      <td>105.727178</td>
+      <td>61.967213</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Centers in percent of median
+</pre>
+</div>
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Fresh</th>
+      <th>Milk</th>
+      <th>Grocery</th>
+      <th>Frozen</th>
+      <th>Detergents_Paper</th>
+      <th>Delicatessen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Segment 0</th>
+      <td>103.621825</td>
+      <td>56.575682</td>
+      <td>56.539108</td>
+      <td>134.862385</td>
+      <td>41.299020</td>
+      <td>73.706004</td>
+    </tr>
+    <tr>
+      <th>Segment 1</th>
+      <td>50.752587</td>
+      <td>174.993107</td>
+      <td>200.904121</td>
+      <td>67.889908</td>
+      <td>373.284314</td>
+      <td>97.826087</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -20163,7 +20273,10 @@ BiBJkiRJnfH/TyR04jXUEfQAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Customers who are assigned to Cluster 0 can be Resturants. Customers who are assigned to Cluster 1 can be Grocery Stores.</p>
+<ul>
+<li>Customers who are assigned to Cluster/Segment 1 can be Grocery Stores since Milk, Grocery, and Detergents_Paper is above global mean and Median.</li>
+<li>Customers who are assigned to Cluster/Segment 0 can be Restaurants since Fresh and Frozen is above median and Delicatessen is high compare to Milk, Grocery, and Detergents_Paper.</li>
+</ul>
 
 </div>
 </div>
@@ -20181,7 +20294,7 @@ BiBJkiRJnfH/TyR04jXUEfQAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display the predictions</span>
@@ -20216,7 +20329,11 @@ Sample point 2 predicted to be in Cluster 1
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>My guess for Sample point 0 and 1 was 'Cafe' and 'Small fruit stand' which could belong to the classification Resturant. My guess for Sample point 2 was Cleaning which is not the same as Grocery Store.</p>
+<ul>
+<li>My guess for sample point 0 was 'Cafe' which could belong to the classification Resturant. The sample point is high compared to mean on Fresh and Frozen (see answer to question 1) which is consistent with Segment 0.</li>
+<li>My guess for sample point 1 was 'Small fruit stand' which could belong to the classification Resturant. The sample point is high compare to mean on Fresh (see answer to question 1) which is consistent with Segment 0.</li>
+<li>My guess for sample point 2 was Cleaning which is not the same as Grocery Store but the cleaning product set can be a subset of Grocery store. The sample point is high compared to mean on Grocery and Detergents_Paper (see answer to question 1) which is consistent with Segment 1.</li>
+</ul>
 
 </div>
 </div>
@@ -20258,6 +20375,12 @@ Sample point 2 predicted to be in Cluster 1
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
 <p>Grocery Stores (Segment 1) generally have larger stocks and less dependent fresh deliveries compare to Restaurants (Segment 0), so reducing number of deliveries will most likely be more negative for Resturants (Segment 0) than Grocery Stores (Segment 1).</p>
+<p>We can test this by</p>
+<ol>
+<li>randambly selecting small test and control groups from each segment</li>
+<li>then we apply the change for a period of time to the test group while collecting as much data we can from all groups</li>
+<li>analys how the purchase pattern changed to the test groups normalized with the control groups. We need the control groups to remove the effect of external changes that we can not control. </li>
+</ol>
 
 </div>
 </div>
@@ -20298,7 +20421,7 @@ Sample point 2 predicted to be in Cluster 1
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display the clustering results based on &#39;Channel&#39; data</span>
