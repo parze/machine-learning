@@ -67,8 +67,15 @@ class LearningAgent(Agent):
         ########### 
         ## DONE ##
         ###########
-        # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs.get('light'), inputs.get('left'), inputs.get('right'), inputs.get('oncoming'))
+        # Set 'state' as a tuple of relevant data for the agent
+
+        # left for oncoming traffic not relevant for agent since other driver must take agents action into account
+        oncoming_not_going_left = inputs.get('oncoming')
+        if (oncoming_not_going_left == 'left'): oncoming_not_going_left = None
+        # only forward for left driver is relevant since agent may take a right when red, else agent should learn
+        # not to drive on red
+        left_driver_going_forward = inputs.get('left') == 'forward'
+        state = (waypoint, inputs.get('light'), left_driver_going_forward, oncoming_not_going_left)
 
         return state
 
@@ -192,7 +199,8 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.2)
+    #agent = env.create_agent(LearningAgent, learning=True, alpha=0.5) # default
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.2) # optimized
     
     ##############
     # Follow the driving agent
@@ -215,7 +223,8 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=5, tolerance=0.001)  #
+    #sim.run(n_test=10)  # default
+    sim.run(n_test=10, tolerance=0.01)  # optimized
 
 
 if __name__ == '__main__':
