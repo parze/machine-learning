@@ -24,9 +24,6 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
         self.trial = 0
-        self.previous_state = None
-        self.previous_action = None
-        self.previous_reward = None
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -42,7 +39,6 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        self.previous_state = None
 
         if testing:
             self.epsilon = 0
