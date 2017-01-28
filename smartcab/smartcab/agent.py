@@ -156,16 +156,9 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        if self.previous_state is not None:
-            self.Q[self.previous_state][self.previous_action] = self.alphaAdd(self.Q[self.previous_state][self.previous_action], self.previous_reward + self.get_maxQ(state))
-
-        self.previous_state = state
-        self.previous_action = action
-        self.previous_reward = reward
+        self.Q[state][action] = self.alpha * reward + (1.0 - self.alpha) * self.Q[state][action]
         return
 
-    def alphaAdd(self, old_value, new_value):
-        return (1.0 - self.alpha) * old_value + self.alpha * new_value
 
     def update(self):
         """ The update function is called when a time step is completed in the 
