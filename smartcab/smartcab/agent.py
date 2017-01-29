@@ -3,6 +3,7 @@ import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
+from gompertz_function import gompertz_function
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -46,7 +47,7 @@ class LearningAgent(Agent):
         else:
             self.trial = self.trial + 1
             #self.epsilon = self.epsilon - 0.05  # default sim
-            self.epsilon = math.pow(0.985, self.trial-1)
+            self.epsilon = gompertz_function(self.trial-1) # optimized 1
 
         return None
 
@@ -64,15 +65,7 @@ class LearningAgent(Agent):
         ## DONE ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent
-
-        # left for oncoming traffic not relevant for agent since other driver must take agents action into account
-        oncoming_not_going_left = inputs.get('oncoming')
-        if (oncoming_not_going_left == 'left'): oncoming_not_going_left = None
-        # only forward for left driver is relevant since agent may take a right when red, else agent should learn
-        # not to drive on red
-        left_driver_going_forward = inputs.get('left') == 'forward'
-        state = (waypoint, inputs.get('light'), left_driver_going_forward, oncoming_not_going_left)
-
+        state = (waypoint, inputs.get('light'), inputs.get('left'), inputs.get('right'), inputs.get('oncoming'))
         return state
 
 
@@ -84,20 +77,20 @@ class LearningAgent(Agent):
         ## DONE ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        action = self.get_maxQ_action(state)
+        action = self.get_maxQ_random_action(state)
         return self.Q[state][action]
 
 
-    def get_maxQ_action(self, state):
+    def get_maxQ_random_action(self, state):
         maxQ = None
-        maxQ_action = None
+        maxQ_actions = []
         Qs = self.Q[state]
         for action in Qs:
-            if maxQ is None or Qs[action] > maxQ:
+            if maxQ is None or Qs[action] >= maxQ:
+                if Qs[action] > maxQ: maxQ_actions = []
                 maxQ = Qs[action]
-                maxQ_action = action
-
-        return maxQ_action
+                maxQ_actions.append(action)
+        return random.choice(maxQ_actions)
 
 
     def createQ(self, state):
@@ -135,7 +128,7 @@ class LearningAgent(Agent):
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
         if self.learning and random.random() > self.epsilon:
-            action = self.get_maxQ_action(state)
+            action = self.get_maxQ_random_action(state)
         else:
             action = random.choice(self.valid_actions)
 
@@ -152,7 +145,9 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        self.Q[state][action] = self.alpha * reward + (1.0 - self.alpha) * self.Q[state][action]
+        if self.learning:
+            self.Q[state][action] = self.alpha * reward + (1.0 - self.alpha) * self.Q[state][action]
+
         return
 
 
@@ -213,7 +208,9 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
     #sim.run(n_test=10)  # default
-    sim.run(n_test=10, tolerance=0.01)  # optimized
+    #sim.run(n_test=10, tolerance=0.001)  # optimized 1
+    sim.run(n_test=10, tolerance=8.84230791089e-05)  # optimized 2
+
 
 
 if __name__ == '__main__':
